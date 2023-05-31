@@ -258,6 +258,7 @@ document.getElementById("clear-cart").addEventListener("click", function() {
   var cartItems = document.getElementsByClassName("item");
   Array.from(cartItems).forEach(function(cartItem) {
     cartItem.style.display = "none";
+    cartItem.querySelector(".item-quantity").textContent = 1;
   });
   updateTotalPrice();
 });
