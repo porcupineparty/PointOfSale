@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Secure Point of Sale</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: lightgray;
+}
+
+.card {
+  position: relative;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: white;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+}
+
+.card h1 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.search-bar {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px 0 0 5px;
+}
+
+.search-bar input[type="submit"] {
+  padding: 0.5rem 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.item {
+  display: none;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.total-price {
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: right;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="card">
+    <h1>Checkout Counter</h1>
+    <div class="search-bar">
+      <form id="item-form">
+        <input type="text" id="upcplox" name="UPC" placeholder="Enter UPC" autofocus>
+        <input type="submit" id="stupid" value="Check Item">
+      </form>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="cart">
+      <h2>Cart</h2>
+      <div class="item" id="user-input">
+        <span id="user-input-name"></span>
+        <span class="item-price">$0.00</span>
+        <span class="item-quantity">1</span>
+      </div>
+      <div class="item" id="apple_watch">
+        <span>Apple Watch</span>
+        <span class="item-price">$199.99</span>
+        <span class="item-quantity">1</span>
+      </div>
+      <div class="item" id="ipad">
+        <span>iPad</span>
+        <span class="item-price">$399.99</span>
+        <span class="item-quantity">1</span>
+      </div>
+      <div class="item" id="pants">
+        <span>Pants</span>
+        <span class="item-price">$29.99</span>
+        <span class="item-quantity">1</span>
+      </div>
+      <div class="item" id="tshirt">
+        <span>T-Shirt</span>
+        <span class="item-price">$14.99</span>
+        <span class="item-quantity">1</span>
+      </div>
+      <div class="item" id="chicken">
+        <span>Chicken</span>
+        <span class="item-price">$5.99</span>
+        <span class="item-quantity">1</span>
+      </div>
+    </div>
+    <div class="total-price" id="total-price"></div>
+    <button id="clear-cart">Purchase Items</button>
+  </div>
+</div>
+
+<script>
+document.getElementById("upcplox").focus();
+
+var itemForm = document.getElementById("item-form");
+var upcInput = document.getElementById("upcplox");
+var result = document.getElementById("result");
+var totalPrice = document.getElementById("total-price");
+
+var selectedItems = [];
+
+function updateTotalPrice() {
+  var total = selectedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  totalPrice.innerHTML = "Total: $" + total.toFixed(2);
+}
+
+function updateCartItem(item) {
+  var cartItem = document.getElementById(item.id);
+  cartItem.querySelector(".item-quantity").textContent = item.quantity;
+  cartItem.querySelector(".item-price").textContent = "$" + item.price.toFixed(2);
+}
+
+function clearInput() {
+  upcInput.value = "";
+}
+
+itemForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+  var upc = upcInput.value.trim().toLowerCase();
+  if (upc.length === 0) {
+    result.innerHTML = "Please enter a UPC.";
+    return;
+  }
+  if (upc === "alert") {
+    alert("DANGER!");
+    clearInput();
+    return;
+  }
+
+  var item = null;
+  switch (upc) {
+    case "apple watch":
+      item = { id: "apple_watch", name: "Apple Watch", price: 199.99, quantity: 1 };
+      break;
+    case "ipad":
+      item = { id: "ipad", name: "iPad", price: 399.99, quantity: 1 };
+      break;
+    case "pants":
+      item = { id: "pants", name: "Pants", price: 29.99, quantity: 1 };
+      break;
+    case "tshirt":
+      item = { id: "tshirt", name: "T-Shirt", price: 14.99, quantity: 1 };
+      break;
+    case "chicken":
+      item = { id: "chicken", name: "Chicken", price: 5.99, quantity: 1 };
+      break;
+    default:
+      result.innerHTML = "Item not found.";
+      return;
+  }
+
+  result.style.display = "block";
+  result.style.background = "#f2f2f2";
+  result.style.border = "1px solid #ccc";
+  result.style.padding = "0.5rem";
+  result.innerHTML = item.name;
+
+  var existingItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
+  if (existingItem) {
+    existingItem.quantity++;
+    updateCartItem(existingItem);
+  } else {
+    selectedItems.push(item);
+    var cartItem = document.getElementById(item.id);
+    cartItem.style.display = "flex";
+  }
+
+  updateTotalPrice();
+  clearInput();
+});
+
+document.getElementById("clear-cart").addEventListener("click", function() {
+  selectedItems = [];
+  var cartItems = document.getElementsByClassName("item");
+  Array.from(cartItems).forEach(function(cartItem) {
+    cartItem.style.display = "none";
+  });
+  updateTotalPrice();
+});
+
+upcInput.addEventListener("input", function() {
+  var upc = upcInput.value.trim().toLowerCase();
+
+  if (upc.toLowerCase() === "change") {
+    var ipadItem = selectedItems.find(item => item.id === "ipad");
+    if (ipadItem) {
+      if (ipadItem.price === 399.99) {
+        ipadItem.price = 3.99;
+        updateCartItem(ipadItem);
+        result.innerHTML = "The price of the iPad has been changed to $3.99.";
+      } else {
+        ipadItem.price = 399.99;
+        updateCartItem(ipadItem);
+        result.innerHTML = "The price of the iPad has been changed back to $399.99.";
+      }
+      updateTotalPrice();
+    } else {
+      result.innerHTML = "The iPad is not in the cart.";
+    }
+    clearInput();
+  } else {
+    result.innerHTML = "";
+  }
+  
+});
+</script>
+</body>
+</html>
