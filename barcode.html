@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Barcode Guessing Challenge</title>
+    <style>
+      /* CSS */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    
+    /* CSS styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    header {
+      background-color: #252b78;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    h1 {
+      margin: 0;
+    }
+    
+    main {
+      padding: 20px;
+    }
+    
+    footer {
+      background-color: #252b78;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Barcode Guessing Challenge</h1>
+  </header>
+  
+  <main>
+    
+    <h2>Information</h2>
+    <ul>
+      <li>Code 128</li>
+      <li>Two characters</li>
+      <li>including 0–9, A–Z, a–z, special characters(?!^@#&*)</li>
+    </ul>
+
+    <h2>The answer is ...</h2>
+    <input type="text" id="myInput" placeholder="Enter text">
+    <button onclick="clearInput()">Clear</button>
+    
+    <script>
+      function clearInput() {
+        document.getElementById("myInput").value = "";
+      }
+    </script>
+
+    <h2>Barcode Table</h2>
+    <p></p>
+    
+    <!-- table -->
+    <table>
+        <thead>
+        <tr>
+            <th>Value</th>
+            <th>Pattern</th>
+            <th>Value</th>
+            <th>Pattern</th>
+            <th>Value</th>
+            <th>Pattern</th>
+            <th>Value</th>
+            <th>Pattern</th>
+            <th>Value</th>
+            <th>Pattern</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>0</td>
+            <td>11011001100</td>
+            <td>1</td>
+            <td>11001101100</td>
+            <td>2</td>
+            <td>11001100110</td>
+            <td>3</td>
+            <td>10010011000</td>
+            <td>4</td>
+            <td>10010001100</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>10001001100</td>
+            <td>6</td>
+            <td>10011001000</td>
+            <td>7</td>
+            <td>10011000100</td>
+            <td>8</td>
+            <td>10001100100</td>
+            <td>9</td>
+            <td>11001001000</td>
+        </tr>
+        <tr>
+            <td>A</td>
+            <td>11001000100</td>
+            <td>B</td>
+            <td>11000100100</td>
+            <td>C</td>
+            <td>10110011100</td>
+            <td>D</td>
+            <td>10011011100</td>
+            <td>E</td>
+            <td>10011001110</td>
+        </tr>
+        <tr>
+            <td>F</td>
+            <td>10111001100</td>
+            <td>G</td>
+            <td>10011101100</td>
+            <td>H</td>
+            <td>10011100110</td>
+            <td>I</td>
+            <td>11001110010</td>
+            <td>J</td>
+            <td>11001011100</td>
+        </tr>
+        <tr>
+            <td>K</td>
+            <td>11001001110</td>
+            <td>L</td>
+            <td>11011100100</td>
+            <td>M</td>
+            <td>11001110100</td>
+            <td>N</td>
+            <td>11101101110</td>
+            <td>O</td>
+            <td>11101001100</td>
+        </tr>
+        <tr>
+            <td>P</td>
+            <td>11100101100</td>
+            <td>Q</td>
+            <td>11100100110</td>
+            <td>R</td>
+            <td>11101100100</td>
+            <td>S</td>
+            <td>11100110100</td>
+            <td>T</td>
+            <td>11100110010</td>
+        </tr>
+        <tr>
+            <td>U</td>
+            <td>11011011000</td>
+            <td>V</td>
+            <td>11011000110</td>
+            <td>W</td>
+            <td>11000110110</td>
+            <td>X</td>
+            <td>10100011000</td>
+            <td>Y</td>
+            <td>10001011000</td>
+        </tr>
+        <tr>
+            <td>Z</td>
+            <td>10001000110</td>
+        </tr>
+        
+        <thead>
+    </table>
+  </main>
+  
+  <footer>
+    <p>All rights reserved &copy; 2023 Barcode Guessing Challenge</p>
+  </footer>
+</body>
+</html>
