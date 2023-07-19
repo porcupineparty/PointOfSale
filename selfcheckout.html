@@ -54,9 +54,11 @@ body {
 }
 
 .result {
+  display: none; /* Hide the result div */
+}
+
+.cart {
   margin-top: 1rem;
-  padding: 0.5rem;
-  border-radius: 5px;
 }
 
 .item {
@@ -81,18 +83,16 @@ body {
 }
 </style>
 </head>
-
 <body>
 <div class="container">
   <div class="card">
     <h1>Checkout Counter</h1>
     <div class="search-bar">
-      <form action="">
+      <form id="item-form">
         <input type="text" id="upcplox" name="UPC" placeholder="Enter UPC" autofocus>
         <input type="submit" id="stupid" value="Check Item">
       </form>
     </div>
-    <div class="result" id="result"></div>
     <div class="cart">
       <h2>Cart</h2>
       <div class="item" id="user-input">
@@ -134,13 +134,8 @@ body {
 <script>
 document.getElementById("upcplox").focus();
 
-var queryDict = {};
-location.search.substr(1).split("&").forEach(function(item) {
-  var i = item.indexOf('=');
-  queryDict[item.slice(0, i)] = item.slice(i + 1);
-});
-
-var result = document.getElementById("result");
+var itemForm = document.getElementById("item-form");
+var upcInput = document.getElementById("upcplox");
 var totalPrice = document.getElementById("total-price");
 
 var selectedItems = [];
@@ -156,59 +151,19 @@ function updateCartItem(item) {
   cartItem.querySelector(".item-price").textContent = "$" + item.price.toFixed(2);
 }
 
-if (queryDict.UPC) {
-  result.style.display = "block";
-  result.style.background = "#f2f2f2";
-  result.style.border = "1px solid #ccc";
-  result.style.padding = "0.5rem";
-  result.innerHTML = "Wowie! " + decodeURIComponent(queryDict.UPC).replace("+", " ") + "! That's an item!";
-  // Add more conditions for different UPC values if needed
-  switch (decodeURIComponent(queryDict.UPC)) {
-    case "Apple watch":
-      document.getElementById("apple_watch").style.display = "flex";
-      var appleWatchItem = { id: "apple_watch", name: "Apple Watch", price: 199.99, quantity: 1 };
-      selectedItems.push(appleWatchItem);
-      updateCartItem(appleWatchItem);
-      break;
-    case "Ipad":
-      document.getElementById("ipad").style.display = "flex";
-      var ipadItem = { id: "ipad", name: "iPad", price: 399.99, quantity: 1 };
-      selectedItems.push(ipadItem);
-      updateCartItem(ipadItem);
-      break;
-    case "Pants":
-      document.getElementById("pants").style.display = "flex";
-      var pantsItem = { id: "pants", name: "Pants", price: 29.99, quantity: 1 };
-      selectedItems.push(pantsItem);
-      updateCartItem(pantsItem);
-      break;
-    case "Tshirt":
-      document.getElementById("tshirt").style.display = "flex";
-      var tshirtItem = { id: "tshirt", name: "T-Shirt", price: 14.99, quantity: 1 };
-      selectedItems.push(tshirtItem);
-      updateCartItem(tshirtItem);
-      break;
-    case "Chicken":
-      document.getElementById("chicken").style.display = "flex";
-      var chickenItem = { id: "chicken", name: "Chicken", price: 5.99, quantity: 1 };
-      selectedItems.push(chickenItem);
-      updateCartItem(chickenItem);
-      break;
-  }
-  
-  updateTotalPrice();
+function clearInput() {
+  upcInput.value = "";
 }
 
-document.getElementById("stupid").addEventListener("click", function(event) {
+itemForm.addEventListener("submit", function(event) {
   event.preventDefault();
-  var upcInput = document.getElementById("upcplox").value;
-  var upc = upcInput.trim().toLowerCase();
+  var upc = upcInput.value.trim().toLowerCase();
   if (upc.length === 0) {
-    result.innerHTML = "Please enter a UPC.";
     return;
   }
   if (upc === "alert") {
     alert("DANGER!");
+    clearInput();
     return;
   }
 
@@ -230,15 +185,8 @@ document.getElementById("stupid").addEventListener("click", function(event) {
       item = { id: "chicken", name: "Chicken", price: 5.99, quantity: 1 };
       break;
     default:
-      result.innerHTML = "Item not found.";
       return;
   }
-
-  result.style.display = "block";
-  result.style.background = "#f2f2f2";
-  result.style.border = "1px solid #ccc";
-  result.style.padding = "0.5rem";
-  result.innerHTML = "Wowie! " + item.name + "! That's an item!";
 
   var existingItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
   if (existingItem) {
@@ -251,6 +199,7 @@ document.getElementById("stupid").addEventListener("click", function(event) {
   }
 
   updateTotalPrice();
+  clearInput();
 });
 
 document.getElementById("clear-cart").addEventListener("click", function() {
@@ -258,18 +207,12 @@ document.getElementById("clear-cart").addEventListener("click", function() {
   var cartItems = document.getElementsByClassName("item");
   Array.from(cartItems).forEach(function(cartItem) {
     cartItem.style.display = "none";
-    cartItem.querySelector(".item-quantity").textContent = 1;
   });
   updateTotalPrice();
 });
 
-document.getElementById("upcplox").addEventListener("input", function() {
-  var upcInput = document.getElementById("upcplox").value;
-  var upc = upcInput.trim();
-
-
-
-  
+upcInput.addEventListener("input", function() {
+  var upc = upcInput.value.trim().toLowerCase();
 
   if (upc.toLowerCase() === "change") {
     var ipadItem = selectedItems.find(item => item.id === "ipad");
@@ -277,18 +220,13 @@ document.getElementById("upcplox").addEventListener("input", function() {
       if (ipadItem.price === 399.99) {
         ipadItem.price = 3.99;
         updateCartItem(ipadItem);
-        result.innerHTML = "The price of the iPad has been changed to $3.99.";
       } else {
         ipadItem.price = 399.99;
         updateCartItem(ipadItem);
-        result.innerHTML = "The price of the iPad has been changed back to $399.99.";
       }
       updateTotalPrice();
-    } else {
-      result.innerHTML = "The iPad is not in the cart.";
     }
-  } else {
-    result.innerHTML = "";
+    clearInput();
   }
 });
 </script>
